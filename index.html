@@ -74,6 +74,7 @@
       <svg id="mail-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
       <svg id="phone-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-phone"><path d="M22 16.92v3a2 2 0 0 1-2.18 2.02 15.79 15.79 0 0 1-8.31-4.41 15.79 15.79 0 0 1-4.41-8.31A2 2 0 0 1 .06 2.18L2.08.18a2 2 0 0 1 2.5-.22 14.65 14.65 0 0 0 4.75 1.74 2 2 0 0 1 1.66 2.43 10.87 10.87 0 0 0 .54 2.3 2 2 0 0 1-.45 2.11L8.09 12.09a16 16 0 0 0 8.82 8.82l1.5-1.5a2 2 0 0 1 2.11-.45 10.87 10.87 0 0 0 2.3.54 2 2 0 0 1 2.43 1.66z"/></svg>
       <svg id="map-pin-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin"><path d="M12 18.7c-3.3 0-6-2.7-6-6s6-12 6-12 6 8.7 6 12-2.7 6-6 6z"/><circle cx="12" cy="10" r="3"/></svg>
+      <svg id="sparkle-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
     </div>
     
     <header id="app-header" class="bg-white shadow-md w-full sticky top-0 z-50 border-b border-gray-200" style="display: none;">
@@ -126,14 +127,13 @@
     </div>
 
     <!-- Modals (Chat, Cart) - Kept same as logic -->
-    <div id="chat-modal" class="fixed bottom-4 right-4 bg-white rounded-2xl shadow-xl transition-all duration-300 ease-in-out w-16 h-16 overflow-hidden flex flex-col z-20">
-        <button id="chat-open-button" class="w-full h-full flex items-center justify-center p-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition duration-200 shadow-lg">
-            <div class="w-8 h-8" id="open-chat-bot-icon"></div>
-        </button>
-        <div id="chat-content" class="h-full w-full flex-col hidden">
+    <!-- UPDATED: Chat Modal starts HIDDEN and NOT fixed as a floating button -->
+    <div id="chat-modal" class="fixed bottom-4 right-4 bg-white rounded-2xl shadow-xl transition-all duration-300 ease-in-out w-full max-w-sm h-96 overflow-hidden flex flex-col z-20 hidden">
+        <!-- Removed Floating Open Button -->
+        <div id="chat-content" class="h-full w-full flex flex-col">
             <div class="flex items-center justify-between p-4 bg-blue-600 text-white rounded-t-2xl">
                 <h2 class="text-lg font-bold flex items-center">
-                    <div class="w-6 h-6 mr-2" id="chat-header-bot-icon"></div> Customer Support
+                    <div class="w-6 h-6 mr-2" id="chat-header-bot-icon"></div> Gemini AI Assistant
                 </h2>
                 <button id="chat-close-button" class="p-1 rounded-full hover:bg-blue-700 transition duration-200">
                     <div class="w-5 h-5" id="chat-close-x-icon"></div>
@@ -142,7 +142,7 @@
             <div id="chat-history" class="flex-1 overflow-y-auto p-4 custom-scrollbar">
             </div>
             <div class="p-4 border-t border-gray-200 flex items-center">
-                <input type="text" id="chat-input" class="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-400 text-sm" placeholder="Type your message..."/>
+                <input type="text" id="chat-input" class="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-400 text-sm" placeholder="Ask Gemini..."/>
                 <button id="chat-send-button" class="ml-2 p-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition duration-200 ease-in-out transform hover:scale-105">
                     <div class="w-5 h-5" id="chat-send-icon"></div>
                 </button>
@@ -179,7 +179,7 @@
             isCartOpen: false,
             usdToInrRate: 83.50,
             cartItems: [],
-            chatHistory: [{ type: 'bot', message: "Hi! I'm your support assistant. Ask me about products, shipping, returns, or tracking!" }],
+            chatHistory: [{ type: 'bot', message: "Hi! I'm your Gemini-powered assistant. Ask me anything about our products!" }],
             searchTerm: '',
             activeCategory: 'All',
         };
@@ -262,11 +262,8 @@
                 const profileContainer = document.createElement('div');
                 profileContainer.className = "flex items-center space-x-3 ml-2";
 
-                // Avatar Circle
-                const avatarCircle = document.createElement('div');
-                avatarCircle.className = "w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold shadow-inner";
-                avatarCircle.innerText = State.currentUser.charAt(0).toUpperCase();
-                
+                // REMOVED THE AVATAR CIRCLE ELEMENT HERE
+
                 // User Name
                 const userSpan = document.createElement('span');
                 userSpan.className = "text-gray-700 text-sm font-bold hidden lg:block tracking-wide";
@@ -278,7 +275,7 @@
                 logoutButton.className = "bg-red-500 hover:bg-red-600 text-white text-sm font-bold py-2 px-5 rounded-lg transition duration-200 shadow-sm";
                 logoutButton.textContent = 'Logout';
 
-                profileContainer.appendChild(avatarCircle);
+                // profileContainer.appendChild(avatarCircle); // REMOVED
                 profileContainer.appendChild(userSpan);
                 profileContainer.appendChild(logoutButton);
                 
@@ -361,9 +358,15 @@
                         </div>
                         <p class="text-sm text-gray-600 mb-3 line-clamp-2 h-10 overflow-hidden">${product.description}</p>
                         ${product.isEcoFriendly ? `<div class="flex items-center text-green-600 text-sm font-medium mb-2"><div class="w-4 h-4 mr-1">${getIcon('leaf-icon')}</div> Eco-Friendly</div>` : ''}
-                        <button data-product-id="${product.id}" class="add-to-cart-button mt-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out transform hover:-translate-y-0.5 w-full">
-                            Add to Cart
-                        </button>
+                        
+                        <div class="w-full flex space-x-2 mt-auto">
+                            <button data-product-id="${product.id}" class="add-to-cart-button flex-1 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out transform hover:-translate-y-0.5">
+                                Add to Cart
+                            </button>
+                            <button data-product-id="${product.id}" class="ai-insight-button p-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-lg transition duration-200" title="Get AI Insight">
+                                ${getIcon('sparkle-icon')}
+                            </button>
+                        </div>
                     </div>
                 `;
             }).join('') : `
@@ -386,6 +389,15 @@
                     const product = allProducts.find(p => p.id === productId);
                     if (product) {
                         addToCart(product);
+                    }
+                });
+            });
+            appContainer.querySelectorAll('.ai-insight-button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const productId = e.currentTarget.dataset.productId;
+                    const product = allProducts.find(p => p.id === productId);
+                    if (product) {
+                        getAiInsight(product);
                     }
                 });
             });
@@ -621,23 +633,23 @@
             renderApp();
         }
         function renderChatModal() {
-            document.getElementById('open-chat-bot-icon').innerHTML = getIcon('bot-icon');
-            document.getElementById('chat-header-bot-icon').innerHTML = getIcon('bot-icon');
-            document.getElementById('chat-close-x-icon').innerHTML = getIcon('x-icon');
-            document.getElementById('chat-send-icon').innerHTML = getIcon('send-icon');
+            // Update icons if elements exist
+            const headerBotIcon = document.getElementById('chat-header-bot-icon');
+            if (headerBotIcon) headerBotIcon.innerHTML = getIcon('bot-icon');
+            
+            const closeXIcon = document.getElementById('chat-close-x-icon');
+            if (closeXIcon) closeXIcon.innerHTML = getIcon('x-icon');
+            
+            const sendIcon = document.getElementById('chat-send-icon');
+            if (sendIcon) sendIcon.innerHTML = getIcon('send-icon');
 
+            // Toggle visibility
             if (State.isChatOpen) {
-                chatModal.classList.remove('w-16', 'h-16');
-                chatModal.classList.add('w-full', 'max-w-sm', 'h-96');
-                document.getElementById('chat-open-button').style.display = 'none';
-                chatContent.classList.remove('hidden');
-                chatContent.classList.add('flex');
+                chatModal.classList.remove('hidden');
+                chatModal.classList.add('flex');
             } else {
-                chatModal.classList.add('w-16', 'h-16');
-                chatModal.classList.remove('w-full', 'max-w-sm', 'h-96');
-                document.getElementById('chat-open-button').style.display = 'flex';
-                chatContent.classList.add('hidden');
-                chatContent.classList.remove('flex');
+                chatModal.classList.add('hidden');
+                chatModal.classList.remove('flex');
             }
             renderChatHistory();
         }
@@ -663,7 +675,7 @@
                             <div class="w-7 h-7 text-blue-500 spinner"></div>
                         </div>
                         <div class="bg-gray-200 text-gray-800 p-3 rounded-lg shadow-md rounded-bl-none">
-                            <p class="text-sm">Thinking...</p>
+                            <p class="text-sm">Typing...</p>
                         </div>
                     </div>
                 `;
@@ -676,63 +688,131 @@
             renderChatHistory();
         }
 
-        function generateBotResponse(userInput) {
-            const lowerInput = userInput.toLowerCase();
-            
-            // 1. Check for specific keywords
-            if (lowerInput.includes('shipping') || lowerInput.includes('delivery')) {
-                return "We offer free shipping on all orders over $35! Standard delivery takes 3-5 business days.";
-            }
-            if (lowerInput.includes('return') || lowerInput.includes('refund')) {
-                return "You can return most items within 90 days of purchase. Just bring your receipt to any store or start a return online.";
-            }
-            if (lowerInput.includes('hello') || lowerInput.includes('hi ')) {
-                return "Hello there! How can I help you shop today?";
-            }
-            if (lowerInput.includes('contact') || lowerInput.includes('support')) {
-                return "You can reach our support team at 1-800-WALMART or email contact@walmart.com.";
-            }
-            if (lowerInput.includes('payment') || lowerInput.includes('card')) {
-                return "We accept all major credit cards, PayPal, and Walmart Pay.";
+        async function callGeminiAPI(prompt, isStructured = false) {
+            let chatHistoryForApi = State.chatHistory.map(msg => ({ role: msg.type, parts: [{ text: msg.message }] }));
+            chatHistoryForApi.push({ role: "user", parts: [{ text: prompt }] });
+
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+            const payload = { contents: chatHistoryForApi };
+
+            if (isStructured) {
+                payload.generationConfig = {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            "productName": { "type": "STRING" },
+                            "insight": { "type": "STRING" }
+                        },
+                        "propertyOrdering": ["productName", "insight"]
+                    }
+                };
             }
 
-            // 2. Check if user mentioned a product name
-            const mentionedProduct = allProducts.find(p => lowerInput.includes(p.name.toLowerCase()));
-            if (mentionedProduct) {
-                // Switch to shop page for that product
-                State.activeCategory = mentionedProduct.category;
-                State.currentPage = 'shop';
-                State.searchTerm = mentionedProduct.name;
-                return `I found the ${mentionedProduct.name}! It costs ${mentionedProduct.price}. taking you to it now...`;
-            }
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
 
-            // 3. Default response
-            return "I can help with shipping, returns, product details, and store info. What would you like to know?";
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error(`Gemini API Error: Status ${response.status}, ${response.statusText}`, errorText);
+                    return `I'm sorry, there was an error connecting to the AI assistant. (Status: ${response.status})`;
+                }
+
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 && result.candidates[0].content && result.candidates[0].content.parts && result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    if (isStructured) {
+                        try {
+                            return JSON.parse(text);
+                        } catch (e) {
+                            console.error("Failed to parse structured JSON from Gemini:", e);
+                            return { error: "Failed to get structured insight." };
+                        }
+                    }
+                    return text;
+                } else {
+                    console.error("Gemini API response structure unexpected:", result);
+                    return "I'm sorry, I couldn't get a response from the AI right now.";
+                }
+            } catch (error) {
+                console.error("Error calling Gemini API:", error);
+                return "There was an error connecting to the AI assistant.";
+            }
         }
 
         async function handleSendMessage() {
             const userInput = chatInput.value.trim();
             if (userInput === '') return;
 
-            // 1. Add User Message
             addChatMessage({ type: 'user', message: userInput });
             chatInput.value = '';
-            
-            // 2. Show Loading State
             State.loading = true;
             renderChatHistory();
 
-            // 3. Simulate Network Delay for realism
-            setTimeout(() => {
-                const botResponse = generateBotResponse(userInput);
-                State.loading = false;
-                addChatMessage({ type: 'bot', message: botResponse });
+            const lowerCaseInput = userInput.toLowerCase();
+            let botResponseText = "I'm still learning! Can you rephrase or ask about products, orders, or sustainability?";
+
+            // Check if user is asking about a product in context (simple keyword match for now)
+            let productFoundForInsight = allProducts.find(product => lowerCaseInput.includes(product.name.toLowerCase()));
+
+            if (productFoundForInsight) {
+               // Ask Gemini for a structured insight if a product is mentioned
+               const insightPrompt = `Given the product "${productFoundForInsight.name}" with description: "${productFoundForInsight.description}", generate a concise, unique selling proposition or a key benefit for a customer. Respond in JSON format with "productName" and "insight" fields.`;
+               const geminiInsightResponse = await callGeminiAPI(insightPrompt, true);
+
+               if (typeof geminiInsightResponse === 'object' && geminiInsightResponse && !geminiInsightResponse.error && geminiInsightResponse.insight) {
+                   botResponseText = `Here's more about the ✨${productFoundForInsight.name}✨:\n\n${productFoundForInsight.description}\n\nAI Insight: "${geminiInsightResponse.insight}"`;
+               } else {
+                   // Fallback if structured parsing fails or Gemini returns plain text
+                   botResponseText = `Here's more about the ${productFoundForInsight.name}:\n\n${productFoundForInsight.description}\n\nI couldn't generate a specific AI insight right now, but it's a great product!`;
+               }
+               // Also navigate to shop and filter
+               State.activeCategory = productFoundForInsight.category;
+               State.currentPage = 'shop';
+            } else {
+                // General chat
+                const geminiTextResponse = await callGeminiAPI(userInput);
+                botResponseText = geminiTextResponse;
                 
-                // If the bot decided to navigate (e.g. found a product), re-render
-                if (botResponse.includes('taking you to it now')) {
-                    renderApp();
+                // Attempt to detect intent to switch category from Gemini's text response (basic heuristic)
+                let categoryFromAI = '';
+                if (botResponseText.toLowerCase().includes('electronics')) categoryFromAI = 'Electronics';
+                else if (botResponseText.toLowerCase().includes('apparel') || botResponseText.toLowerCase().includes('shoes')) categoryFromAI = 'Apparel';
+                else if (botResponseText.toLowerCase().includes('eco-friendly') || botResponseText.toLowerCase().includes('sustainable')) categoryFromAI = 'Eco-Friendly';
+                else if (botResponseText.toLowerCase().includes('furniture')) categoryFromAI = 'Furniture';
+                else if (botResponseText.toLowerCase().includes('accessories')) categoryFromAI = 'Accessories';
+                else if (botResponseText.toLowerCase().includes('fitness')) categoryFromAI = 'Fitness';
+                else if (botResponseText.toLowerCase().includes('food') || botResponseText.toLowerCase().includes('beverage')) categoryFromAI = 'Food & Beverage';
+
+                if (categoryFromAI) {
+                    State.activeCategory = categoryFromAI;
+                    State.currentPage = 'shop';
                 }
-            }, 600);
+            }
+
+            State.loading = false;
+            addChatMessage({ type: 'bot', message: botResponseText });
+            renderApp();
+        }
+
+        async function getAiInsight(product) {
+            State.isChatOpen = true;
+            renderChatModal();
+            addChatMessage({ type: 'bot', message: `Thinking about ✨ ${product.name}...` });
+            State.loading = true;
+            renderChatHistory();
+
+            const prompt = `Tell me 3 amazing facts about the ${product.name} (${product.category}) that would make a customer want to buy it immediately. Keep it short and punchy.`;
+            const insight = await callGeminiAPI(prompt);
+            
+            State.loading = false;
+            addChatMessage({ type: 'bot', message: insight });
         }
 
         function renderCartModal() {
@@ -849,4 +929,3 @@
         });
     </script>
 </body>
-</html>
